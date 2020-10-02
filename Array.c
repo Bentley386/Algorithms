@@ -1,26 +1,31 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-int maxSubarraySumBad(int *array, int size);
+#define N 100000
+
+int maxSubarraySumBad(int *array, int size); //Find maximum subarray sum
 int maxSubarraySumGood(int *array, int size);
 int maxSubarraySumBest(int *array, int size);
 
 void bubbleSort(int *array, int size);
 void mergeSort(int *array, int left,int right);
 
+int * countingSort(int *array, int size, int maxEl); //Sort an array with non negative bounded elements.
+
 int binarySearch(int *array, int x, int size);
 int binarySearch2(int *array, int x, int size);
 
 int main(){
-    int test[] = {2,-2,3,4,-5,2,9,0,-1};
-    mergeSort(test,0,9);
-    int indeks = binarySearch2(test,4,9);
-    for (int i=0; i<9; i++) printf("%d\n",test[i]);
-    printf("%d",indeks);
+    int test[] = {2,6,3,4,12,2,9,0,15};
+    int* result = malloc(sizeof(int)*N); 
+    result = countingSort(test,9,100);
+    for (int i=0; i<9; i++) printf("%d\n",*(result+i));
     return 0;
 }
 
 int maxSubarraySumBad(int *array, int size){
-    // O(n^3)
+    // Find maximum subarray sum in O(n^3)
+
     int max=0;
     int sum;
     for (int i=0; i<size;i++){
@@ -37,7 +42,8 @@ int maxSubarraySumBad(int *array, int size){
 }
 
 int maxSubarraySumGood(int *array, int size){
-    //o(n^2)
+    // Find maximum subarray sum in O(n^2)
+
     int max=0;
     int sum;
     for (int i=0; i<size;i++){
@@ -51,7 +57,8 @@ int maxSubarraySumGood(int *array, int size){
 }
 
 int maxSubarraySumBest(int *array, int size){
-    //o(n)
+    //Find maximum subarray sum in O(n)
+
     int realMax=0;
     int runningMax=0;
     for (int i=0; i<size; i++){
@@ -63,7 +70,8 @@ int maxSubarraySumBest(int *array, int size){
 }
 
 void bubbleSort(int *array, int size){
-    //o(n^2)
+    //Sort an array in place in O(n^2)
+
     int temp;
     for (int i =0;i<size;i++){
         for (int j= 0; j<size-1; j++){
@@ -77,7 +85,8 @@ void bubbleSort(int *array, int size){
 }
 
 void mergeSort(int *array, int left,int right){
-    //o(n logn)
+    //Sort an array in place in O(n logn). Initial call is with left=0,right=size-1
+
     if (left >= right-1) return;
     int mid = (right+left)/2;
     mergeSort(array,left,mid);
@@ -109,8 +118,29 @@ void mergeSort(int *array, int left,int right){
 
 }
 
+int* countingSort(int *array, int size, int maxEl){
+    //Sort an array, with integer elements in [0,maxEl] in O(n).
+
+    int Count[maxEl];
+    for (int i=0;i<maxEl;i++) Count[i]=0;
+    for (int i=0;i<size;i++){
+        Count[array[i]]++;
+    }
+    static int result[N]; 
+    int i=0;
+    for (int j=0;j<maxEl;j++){
+        if (!Count[j]) continue;
+        while(Count[j]--) {
+            *(result+i) = j;
+            i++;
+        }
+    }
+    return result;
+}
+
 int binarySearch(int *array, int x, int size){
-    //O(logn)
+    //Find an element x in a sorted array in O(logn).
+
     int L=0;
     int R=size-1;
     int mid;
@@ -124,7 +154,8 @@ int binarySearch(int *array, int x, int size){
 }
 
 int binarySearch2(int *array, int x, int size){
-    //O(logn)
+    //Find an element x in a sorted array in O(logn).
+
     int i=0;
     for (int jump=size/2;jump>=1;jump/=2){
         while (i+jump < size && array[i+jump]<=x) i+=jump;
