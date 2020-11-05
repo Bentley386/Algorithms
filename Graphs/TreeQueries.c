@@ -106,25 +106,4 @@ int main(){
     fillAncestors(graph->numVertices,ancestors);
     lowestCommonAncestor(5,7,graph->numVertices,ancestors);
     return 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
